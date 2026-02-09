@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>WDMAHJONG - JAMIZIN</title>
+    <style>
+        @import url('https://fonts.googleapis.com');
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.9)), url('https://img.lovepik.com/photo/60221/5416.jpg_wh860.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: white
+            
+        }
+
+        .header-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gold-glow 3s ease-in-out infinite alternate;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+        }
+
+        @keyframes gold-glow {
+            0% { filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.4)); transform: scale(1); }
+            100% { filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.9)); transform: scale(1.02); }
+        }
+
+        .main-wrapper {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border: 2px solid #ffd700;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+            width: 100%;
+            max-width: 450px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ffd700;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+            letter-spacing: 3px;
+            font-size: 1.2rem;
+        }
+
+        .form-group { margin-bottom: 12px; }
+        label { font-size: 11px; text-transform: uppercase; color: #ffd700; font-weight: bold; }
+        
+        select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #ffd700;
+            border-radius: 8px;
+            color: white;
+            outline: none;
+            cursor: pointer;
+        }
+
+        option { background: #1a1a1a; color: white; }
+
+        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        .btn-out { background: #b22222; }
+        .btn-in { background: #daa520; color: #000000ff; }
+        button:hover:not(:disabled) { transform: scale(1.05); filter: brightness(1.2); }
+        button:disabled { background: #555; cursor: not-allowed; opacity: 0.6; }
+
+        #log-izin {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 12px;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid #ffd700;
+        }
+
+        .warning-text {
+            color: #ffeb3b;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            animation: pulse 1.5s infinite;
+            text-align: center;
+        }
+
+        @keyframes pulse { 0% {opacity: 1;} 50% {opacity: 0.5;} 100% {opacity: 1;} }
+
+        .time-val { font-family: 'Orbitron', sans-serif; font-size: 1.4rem; color: #ffd700; }
+
+        .history-container {
+            width: 100%;
+            max-width: 900px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th { text-align: left; padding: 12px; border-bottom: 2px solid #ffd900b3; color: #ffd700; }
+        td { padding: 12px; border-bottom: 1px solid rgba(129, 167, 58, 0.1); }
+        .status-aman { color: #4caf50; font-weight: bold; }
+        .status-lewat { color: #f44336; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="header-title">WDMAHJONG</div>
+
+    <div class="container">
+        <h2>JAM IZIN KELUAR</h2>
+        
+        <div class="form-group">
+            <label>NAMA STAFF</label>
+            <select id="namaKaryawan" onchange="checkDailyLimit()">
+                <option value="" disabled selected>-- Pilih Nama --</option>
+                <option value="GIO VANY">GIO VANY</option>
+                <option value="YOLANDO PARNINGOTAN SITUMORANG">YOLANDO PARNINGOTAN SITUMORANG</option>
+                <option value="KAREN TABITA LESTARI SITORUS">KAREN TABITA LESTARI SITORUS</option>
+                <option value="SEFRIYANA">SEFRIYANA</option>
+                <option value="HERYANTO PUTRA">HERYANTO PUTRA</option>
+                <option value="DIMAS GUSTI NANDA">DIMAS GUSTI NANDA</option>
+            </select>
+        </div>
+
+        <div style="display:flex; gap:10px;">
+            <div class="form-group" style="flex:1;">
+                <label>ROLE</label>
+                <select id="jabatan">
+                    <option value="" disabled selected>Pilih ROLE</option>
+                    <option value="CS">CS</option>
+                    <option value="KASIR">KASIR</option>
+                    <option value="KAPTEN">KAPTEN</option>
+                </select>
+            </div>
+            <div class="form-group" style="flex:1;">
+                <label>Jobdesk</label>
+                <select id="jobdesk">
+                    <option value=""disabled selected>Pilih JOBDESK</option>
+                    <option value="LINE UTAMA">LINE UTAMA</option>
+                    <option value="LINE BACKUP">LINE BACKUP</option>
+                    <option value="LIVECHAT">LIVECHAT</option>
+                    <option value="DEPO BCA">DEPO BCA</option>
+                    <option value="DEPO BNI">DEPO BNI</option>
+                    <option value="DEPO BRI">DEPO BRI</option>
+                    <option value="DEPO MANDIRI">DEPO MANDIRI</option>
+                    <option value="DEPO EWALLET OVO GOPAY LINKAJA">DEPO EWALLET OVO GOPAY LINKAJA</option>
+                    <option value="DEPO EWALLET DANA">DEPO EWALLET DANA</option>
+                    <option value="WITHDRAW">WITHDRAW</option>
+                    <option value="DEPO MANUAL ALL BANK">DEPO MANUAL ALL BANK</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-out" id="btnKeluar" onclick="catatKeluar()">START</button>
+            <button class="btn-in" onclick="catatMasuk()">FINISH</button>
+        </div>
+
+        <p id="limitInfo" style="color: #ffeb3b; font-size: 0.8rem; text-align: center; margin-top: 10px;">Pilih Nama untuk cek sisa izin.</p>
+
+        <div id="log-izin">
+            <div class="warning-text">⚠️ PERINGATAN: JANGAN TELAT BOS!</div>
+            <div id="resInfo" style="font-weight: bold; color: #ffd700; margin-bottom: 5px; text-align:center;"></div>
+            <div style="display: flex; justify-content: space-between;">
+                <div><label>Jam Keluar</label><div id="jamKeluar" class="time-val">--:--</div></div>
+                <div style="text-align: right;"><label>Jam Kembali</label><div id="jamMasuk" class="time-val">--:--</div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="history-container">
+        <h3 style="margin-top:0; color: #ffd700; text-align:center;">DASHBOARD IZIN WDMAHJONG</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>NAMA STAFF</th>
+                    <th>ROLE</th>
+                    <th>WAKTU KELUAR</th>
+                    <th>WAKTU MASUK</th>
+                    <th>DURASI</th>
+                    <th>KETERANGAN</th>
+                <td>
+            </thead>
+            <tbody id="historyBody"></tbody>
+        </table>
+    </div>
+
+      <script>
+        const MAX_LIMIT = 4;
+        const MAX_MENIT_AMAN = 15;
+
+        // Fungsi Reset Harian
+        function checkAutoReset() {
+            const today = new Date().toISOString().slice(0, 10);
+            if (localStorage.getItem('last_date') !== today) {
+                // Jangan hapus semua, cukup update tanggal
+                localStorage.setItem('last_date', today);
+            }
+        }
+
+        window.onload = function() {
+            checkAutoReset();
+            renderTable();
+            setInterval(renderTable, 1000); 
+        };
+
+        function getTime() {
+            const now = new Date();
+            return {
+                obj: now,
+                str: now.getHours().toString().padStart(2, '0') + ":" + 
+                     now.getMinutes().toString().padStart(2, '0') + ":" + 
+                     now.getSeconds().toString().padStart(2, '0'),
+                dateStr: now.toISOString().slice(0, 10)
+            };
+        }
+
+        function checkDailyLimit() {
+            const nama = document.getElementById('namaKaryawan').value;
+            const today = getTime().dateStr;
+            const logs = JSON.parse(localStorage.getItem('absensi_logs')) || [];
+            
+            // Hitung berapa kali sudah SELESAI izin hari ini
+            const count = logs.filter(l => l.nama === nama && l.status === 'AMAN' && l.date === today).length;
+            // Cek apakah sedang di luar
+            const isOut = logs.find(l => l.nama === nama && l.status === 'DILUAR');
+
+            const btnOut = document.getElementById('btnKeluar');
+            const infoP = document.getElementById('limitInfo');
+
+            if (!nama) return;
+
+            if (isOut) {
+                btnOut.disabled = true;
+                infoP.innerHTML = `⚠️ <b>${nama}</b> SEDANG DILUAR.`;
+            } else if (count >= MAX_LIMIT) {
+                btnOut.disabled = true;
+                infoP.innerHTML = `❌ <b>${nama}</b> SUDAH MENCAPAI BATAS HARIAN!`;
+            } else {
+                btnOut.disabled = false;
+                infoP.innerHTML = `✅ SISA IZIN <b>${nama}</b>: ${MAX_LIMIT - count}x`;
+            }
+        }
+
+        function catatKeluar() {
+            const nama = document.getElementById('namaKaryawan').value;
+            const role = document.getElementById('jabatan').value;
+            const job = document.getElementById('jobdesk').disabled ? "-" : document.getElementById('jobdesk').value;
+
+            if(!nama || !role) return alert("ISI ROLE SAMA JOBDESK DULU BOS!");
+
+            const waktu = getTime();
+            let logs = JSON.parse(localStorage.getItem('absensi_logs')) || [];
+
+            logs.push({
+                nama: nama,
+                jabatan: role + (job !== "-" ? " - " + job : ""),
+                jamKeluar: waktu.str,
+                keluarRaw: waktu.obj.getTime(),
+                jamMasuk: "--:--",
+                date: waktu.dateStr,
+                status: 'DILUAR'
+            });
+
+            localStorage.setItem('absensi_logs', JSON.stringify(logs));
+            checkDailyLimit();
+            renderTable();
+        }
+
+        function catatMasuk() {
+            const nama = document.getElementById('namaKaryawan').value;
+            if(!nama) return alert("Pilih nama!");
+
+            const waktu = getTime();
+            let logs = JSON.parse(localStorage.getItem('absensi_logs')) || [];
+            
+            // CARI DATA MILIK NAMA TERSEBUT YANG MASIH 'DILUAR'
+            const index = logs.findLastIndex(l => l.nama === nama && l.status === 'DILUAR');
+
+            if (index !== -1) {
+                logs[index].jamMasuk = waktu.str;
+                logs[index].masukRaw = waktu.obj.getTime();
+                logs[index].status = 'AMAN';
+                
+                localStorage.setItem('absensi_logs', JSON.stringify(logs));
+                checkDailyLimit();
+                renderTable();
+            } else {
+                alert("START DULU BARU FINISH!");
+            }
+        }
+
+        function renderTable() {
+            const logs = JSON.parse(localStorage.getItem('absensi_logs')) || [];
+            const tbody = document.getElementById('historyBody');
+            tbody.innerHTML = '';
+            const skrgMs = new Date().getTime();
+
+            // Counter Orang Keluar
+            const activeCount = logs.filter(l => l.status === 'DILUAR').length;
+            const counterEl = document.getElementById('activeCount');
+            if(counterEl) counterEl.innerText = activeCount;
+
+            [...logs].reverse().forEach(log => {
+                const tAkhir = log.status === 'AMAN' ? log.masukRaw : skrgMs;
+                const diff = Math.floor((tAkhir - log.keluarRaw) / 1000);
+                const durasi = Math.floor(diff/60) + "m " + (diff%60) + "s";
+                
+                let st = log.status;
+                let cl = log.status === 'AMAN' ? 'status-aman' : 'status-diluar';
+                if(diff > 900) { st = "LEWAT"; cl = "status-lewat"; }
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="color: #f7f6f1ff;"><strong>${log.nama}</strong></td>
+                        <td style="color: #f7f6f1ff;">${log.jabatan}</td>
+                        <td style="color: #f7f6f1ff; font-family: Orbitron;">${log.jamKeluar}</td>
+                        <td style="color: #f7f6f1ff; font-family: Orbitron;">${log.jamMasuk}</td>
+                        <td style="color: #f7f6f1ff; font-family: Orbitron;">${durasi}</td>
+                        <td class="${cl}">${st}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function handleRoleChange() {
+            const role = document.getElementById('jabatan').value;
+            const jobSelect = document.getElementById('jobdesk');
+            jobSelect.disabled = (role === "KAPTEN");
+            jobSelect.style.opacity = (role === "KAPTEN") ? "0.5" : "1";
+            if(role === "KAPTEN") jobSelect.value = "";
+        }
+    </script>
